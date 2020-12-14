@@ -113,3 +113,7 @@ C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\bin\Ninject.xml
 C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\bin\Ninject.Web.Common.xml
 C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\bin\Ninject.Web.Common.WebHost.xml
 C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\bin\Ninject.Web.Mvc.xml
+C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\obj\Debug\BlogMVC.csprojAssemblyReference.cache
+C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\obj\Debug\BlogMVC.Migrations.InitialCreate.resources
+C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\obj\Debug\BlogMVC.csproj.GenerateResource.cache
+C:\Users\Art2\source\repos\BlogMVC\BlogMVC\BlogMVC\obj\Debug\BlogMVC.Migrations.AddTable_Blog.resources
