@@ -29,6 +29,11 @@ namespace BlogMVC
             // внедрение зависимостей
             NinjectModule registrations = new LogicDIModule();
             var kernel = new StandardKernel(registrations);
+
+            // для исправления ошибки на стороне клиента 
+            // https://stackoverflow.com/questions/62751932/getting-the-following-error-in-asp-net-mvc-5-validation-type-names-in-unobtrusi
+            kernel.Unbind<ModelValidatorProvider>();
+
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
     }
