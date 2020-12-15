@@ -1,6 +1,10 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
- 
 
-index - home 
+
+@Html.RouteLink("Blogs",new {
+    controller="Blogs",action = "Create"
+})
+
+home  -  index 

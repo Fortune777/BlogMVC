@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BlogMVC.Models.Entity;
@@ -15,6 +16,9 @@ namespace BlogMVC.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+
+            userIdentity.AddClaim(new Claim("id",this.Id));
+
             return userIdentity;
         }
     }
