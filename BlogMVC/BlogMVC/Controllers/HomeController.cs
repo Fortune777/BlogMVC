@@ -7,6 +7,7 @@ using BlogMVC.Models;
 
 namespace BlogMVC.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _dbContext;

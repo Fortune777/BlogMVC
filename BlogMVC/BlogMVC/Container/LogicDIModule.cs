@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Services;
+using AutoMapper;
 using BlogMVC.Models;
 using Microsoft.Owin.Logging;
 using Ninject;
 using Ninject.Modules;
+using AutoMapper.Mappers;
+using BlogMVC.Models.DTO;
+using BlogMVC.Models.Entity;
 
 namespace BlogMVC.Container
 {
@@ -15,7 +19,22 @@ namespace BlogMVC.Container
     {
         public override void Load()
         {
+            //Mapper.Initialize(cfg => cfg.AddProfiles(typeof(BlogProfile)));
+            //var mapper = Mapper.Configuration.CreateMapper();
+            //this.Bind<IMapper>().ToConstant(mapper);
+
             this.Bind<ApplicationDbContext>().ToSelf();
+         
         }
     }
+
+    //public class BlogProfile
+    //{
+          
+    //    public BlogProfile()
+    //    {
+            
+    //         // CreateMap<Blog, BlogDto>().ReverseMap();
+    //    }
+    //}
 }
