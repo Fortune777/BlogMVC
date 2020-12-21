@@ -18,7 +18,8 @@ namespace BlogMVC
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new InitializationDb());
+
+            // Database.SetInitializer(new InitializationDb());
 
 
             AreaRegistration.RegisterAllAreas();
@@ -38,5 +39,5 @@ namespace BlogMVC
         }
     }
 
-   
+
 }
