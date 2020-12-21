@@ -11,12 +11,16 @@ namespace BlogMVC.Models.DTO
     public class BlogDto
     {
         [HiddenInput]
-        public  int BlogId { get; set; }
+        public  string BlogId { get; set; }
+
         [Required]
-        public string Header { get; set; }
+        [DataType(DataType.Text)]
+        [MaxLength(100)]
+        public string Title { get; set; }
 
         [Required]
         [DataType(DataType.MultilineText)]
+        [MaxLength(3000)]
         public string Body { get; set; }
     }
 }

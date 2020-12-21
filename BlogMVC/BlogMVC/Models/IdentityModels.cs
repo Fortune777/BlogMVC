@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BlogMVC.Models.Entity;
@@ -28,9 +29,14 @@ namespace BlogMVC.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            Database.Log = (msg) =>
+            {
+                Debug.Write(msg);
+            };
         }
 
         public DbSet<Blog> BLogs { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

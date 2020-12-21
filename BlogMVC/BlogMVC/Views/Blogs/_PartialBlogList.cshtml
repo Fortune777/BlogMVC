@@ -1,0 +1,28 @@
+﻿@using BlogMVC.Models.DTO
+@model List<BlogMVC.Models.DTO.BlogDto>
+
+ 
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"> Create a new post </h4>
+                <h6 class="card-subtitle mb-2 text-muted"> Describe your new feat on the blog </h6>
+
+                @Html.ActionLink("New Post", "Create", null,
+                    htmlAttributes: new { @class = "card-link" })
+            </div>
+        </div>
+   
+    @for (int i = 0; i < @Model.Count(); i++)
+    {
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"> @Html.Label(@Model[i].Title)</h4>
+                    <h6 class="card-subtitle mb-2 text-muted"> @Html.Label(@Model[i].Body)</h6>
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model[i].BlogId },
+                        htmlAttributes: new { @class = "card-link" })
+
+                    @Html.ActionLink("Delete", "Delete", new { id = @Model[i].BlogId },
+                        htmlAttributes: new { @class = "card-link" })
+                </div>
+            </div>
+    }

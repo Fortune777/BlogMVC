@@ -3,13 +3,18 @@ using BlogMVC.Models;
 using BlogMVC.Models.Entity;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
+using BlogMVC.Models.DTO;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WebGrease.Css.Ast.Selectors;
 
 namespace BlogMVC.Controllers
 {
@@ -17,23 +22,32 @@ namespace BlogMVC.Controllers
     public class BlogsController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public BlogsController(ApplicationDbContext dbContex)
+        public BlogsController(ApplicationDbContext dbContex, IMapper mapper)
         {
             _dbContext = dbContex;
+            _mapper = mapper;
         }
 
         // GET: Blogs
         public async Task<ActionResult> Index()
         {
-           // найти где лежит юзер Id
-            // var claims = HttpContext.User.Identity.i
-            var userId = (HttpContext.User.Identity as ClaimsIdentity).FindFirstValue("id");
-
-            var blogs = await _dbContext.BLogs.AsNoTracking().Where(x => x.BlogId == userId).ToArrayAsync();
-
-            return View(blogs);
+            return await Task.FromResult(View());
         }
+
+
+        [ChildActionOnly]
+        public ActionResult RenderBlogList()
+        {
+            var userId = (HttpContext.User.Identity as ClaimsIdentity).FindFirstValue("id");
+            var blogs = _dbContext.BLogs.AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .ProjectToList<BlogDto>();
+            
+            return PartialView("_PartialBlogList", blogs);
+        }
+
 
         // GET: Blogs/Details/5
         public async Task<ActionResult> Details(int? id)
@@ -43,11 +57,13 @@ namespace BlogMVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Blog blog = await _dbContext.BLogs.FindAsync(id);
+            var dto = _mapper.Map<BlogDto>(blog);
+
             if (blog == null)
             {
                 return HttpNotFound();
             }
-            return View(blog);
+            return View(dto);
         }
 
         // GET: Blogs/Create
@@ -58,19 +74,21 @@ namespace BlogMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Header,Body")] Blog blog)
+        public ActionResult Create([Bind(Include = "Title,Body")] BlogDto blog)
         {
             if (ModelState.IsValid)
             {
-                blog.BlogId = (HttpContext.User.Identity as ClaimsIdentity).FindFirstValue("id");
-                blog.LastEditDateTime = DateTime.UtcNow;
-                _dbContext.BLogs.Add(blog);
+                var entity = _mapper.Map<Blog>(blog);
+                entity.UserId = (HttpContext.User.Identity as ClaimsIdentity).FindFirstValue("id");
+                entity.LastEditDateTime = DateTime.UtcNow;
+                
+                _dbContext.BLogs.Add(entity);
 
                 try
-                { 
+                {
                     _dbContext.SaveChanges();
                 }
-                catch (Exception e)
+                catch (DbUpdateException e)
                 {
                     Console.WriteLine(e);
                 }
@@ -78,7 +96,8 @@ namespace BlogMVC.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(blog);
+
+            return View();
         }
 
         // GET: Blogs/Edit/5
@@ -88,12 +107,15 @@ namespace BlogMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Blog blog = await _dbContext.BLogs.FindAsync(id);
+            var dto = _mapper.Map<BlogDto>(blog);
+
             if (blog == null)
             {
                 return HttpNotFound();
             }
-            return View(blog);
+            return View(dto);
         }
 
         // POST: Blogs/Edit/5
@@ -101,7 +123,7 @@ namespace BlogMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Header,Body")] Blog blog)
+        public async Task<ActionResult> Edit([Bind(Include = "Title,Body")] BlogDto blog)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +131,10 @@ namespace BlogMVC.Controllers
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(blog);
+
+            var dto = _mapper.Map<BlogDto>(blog);
+
+            return View(dto);
         }
 
         // GET: Blogs/Delete/5
@@ -119,12 +144,15 @@ namespace BlogMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Blog blog = await _dbContext.BLogs.FindAsync(id);
+            var dto = _mapper.Map<BlogDto>(blog);
+
             if (blog == null)
             {
                 return HttpNotFound();
             }
-            return View(blog);
+            return View(dto);
         }
 
         // POST: Blogs/Delete/5

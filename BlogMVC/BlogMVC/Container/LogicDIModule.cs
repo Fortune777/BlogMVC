@@ -12,6 +12,7 @@ using Ninject.Modules;
 using AutoMapper.Mappers;
 using BlogMVC.Models.DTO;
 using BlogMVC.Models.Entity;
+using BlogMVC.Models.ProfileAutomapper;
 
 namespace BlogMVC.Container
 {
@@ -19,22 +20,12 @@ namespace BlogMVC.Container
     {
         public override void Load()
         {
-            //Mapper.Initialize(cfg => cfg.AddProfiles(typeof(BlogProfile)));
-            //var mapper = Mapper.Configuration.CreateMapper();
-            //this.Bind<IMapper>().ToConstant(mapper);
+             Mapper.Initialize(cfg => cfg.AddProfiles(typeof(BlogProfile)));
+             var mapper = Mapper.Configuration.CreateMapper();
+             this.Bind<IMapper>().ToConstant(mapper);
 
             this.Bind<ApplicationDbContext>().ToSelf();
          
         }
     }
-
-    //public class BlogProfile
-    //{
-          
-    //    public BlogProfile()
-    //    {
-            
-    //         // CreateMap<Blog, BlogDto>().ReverseMap();
-    //    }
-    //}
 }
