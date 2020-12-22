@@ -15,6 +15,7 @@ using BlogMVC.Models.DTO;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WebGrease.Css.Ast.Selectors;
+using Serilog;
 
 namespace BlogMVC.Controllers
 {
@@ -23,12 +24,15 @@ namespace BlogMVC.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public BlogsController(ApplicationDbContext dbContex, IMapper mapper)
+        public BlogsController(ApplicationDbContext dbContex, IMapper mapper, ILogger logger)
         {
+            _logger = logger;
             _dbContext = dbContex;
             _mapper = mapper;
         }
+
 
         // GET: Blogs
         public async Task<ActionResult> Index()
@@ -40,6 +44,7 @@ namespace BlogMVC.Controllers
         [ChildActionOnly]
         public ActionResult RenderBlogList()
         {
+            _logger.Information("getting by id all posts the user");
             var userId = (HttpContext.User.Identity as ClaimsIdentity).FindFirstValue("id");
             var blogs = _dbContext.BLogs.AsNoTracking()
                 .Where(x => x.UserId == userId)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BlogMVC.Models;
+using Serilog;
 
 namespace BlogMVC.Controllers
 {
@@ -11,13 +12,17 @@ namespace BlogMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
-        public HomeController(ApplicationDbContext dbContext)
+        private readonly ILogger _logger;
+
+        public HomeController(ApplicationDbContext dbContext,ILogger logger)
         {
+            _logger = logger;
             _dbContext = dbContext;
         }
 
         public ActionResult Index()
         {
+            _logger.Information("View Home/Index page" + this.User.Identity.Name);
             return View();
         }
 
